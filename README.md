@@ -19,6 +19,7 @@ Back It Up from Instance to Instance
 - To install, You need to clone this directory to your local machine or instance that 
 you want take backup from.
 - Then, `cd` to that directory and fire following command in Terminal.
+
 ```bash
  $ sudo python setup.py install
 ```
