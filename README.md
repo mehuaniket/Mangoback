@@ -25,6 +25,8 @@ you want take backup from.
 ## Usage
 
 - First you need to define config variable as following in script:
+
+
 ```python
 import os
 from mangoback import MangoBack
@@ -49,6 +51,7 @@ CONFIG = {
 
 MG = MangoBack(CONFIG)
 MG.run()
+
 ```
 - Before running script, First make directory in remote instance where you'll store your
  backup.
