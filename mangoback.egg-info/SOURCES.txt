@@ -1,0 +1,7 @@
+setup.py
+mangoback/__init__.py
+mangoback.egg-info/PKG-INFO
+mangoback.egg-info/SOURCES.txt
+mangoback.egg-info/dependency_links.txt
+mangoback.egg-info/requires.txt
+mangoback.egg-info/top_level.txt

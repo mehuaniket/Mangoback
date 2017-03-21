@@ -1,0 +1,22 @@
+Metadata-Version: 1.1
+Name: mangoback
+Version: 0.1.0
+Summary: Purpose of this mongoback library is to make it easy for user to take backup from one instace and restore it on another instance by just configuring one config file.
+Home-page: UNKNOWN
+Author: Aniket patel
+Author-email: patelaniket165@gmail.com
+License: MIT
+Download-URL: https://github.com/kodani/mangoback
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Development Status :: 1 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: IOT developers and automation
+Classifier: Programming Language :: Python
+Classifier: Natural Language :: English
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 2.6
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Topic :: mongodb :: local to remote backup ::backup on instance
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Software Development :: Libraries
