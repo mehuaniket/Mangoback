@@ -22,6 +22,7 @@ you want take backup from.
 ```bash
  $ sudo python setup.py install
 ```
+
 ## Usage
 
 - First you need to define config variable as following in script:
