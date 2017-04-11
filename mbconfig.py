@@ -11,16 +11,19 @@ CONFIG = {
         "auth":False,
         "uname":None,
         "pwd":None,
+        "port":"27017",
         "backup_dir": os.getcwd() + "/backup/"
     },
     "restore_config": {
         "auth":False,
         "uname":None,
         "pwd":None,
-        "remote": True,
-        "instance_url": "ubuntu@ec2-435-134-234-225.us-west-2.compute.amazonaws.com",
+        "remote": False,
+        "remote_install":True,
+        "instance_url": "ubuntu@35.164.228.234",
+        "port":"27017",
         "remote_dir": "/home/ubuntu/backup",
-        "pem_file": "/home/aniket/Desktop/projects/keys/example.pem"
+        "pem_file": "/Users/Aniket/Documents/keys/iot-com.pem"
     }
 }
 

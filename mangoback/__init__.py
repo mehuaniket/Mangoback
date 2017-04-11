@@ -17,7 +17,6 @@ class MangoBack:
         """initilise configuration from config directory"""
         # mangoback always take backup from only local URLs
         self.host = "127.0.0.1"
-        self.port = "27017"
         # ps is to holding variable for subprocess in every function.
         self.ps = None
         self.spinner = None
@@ -37,7 +36,8 @@ class MangoBack:
             self.dbname = None
         # you must specify backup directory
         self.backup_dir = config["backup_config"]["backup_dir"]
-
+        self.port = config["backup_config"]["port"]
+        self.remote = config["restore_config"]["remote"]
         if config["restore_config"]["remote"] is True:
             if config["restore_config"]["auth"] is True:
                 self.runame = config["restore_config"]["uname"]
@@ -46,8 +46,10 @@ class MangoBack:
                 self.runame = None
                 self.rpwd = None
             self.instance_url = config["restore_config"]["instance_url"]
+            self.rport = config["restore_config"]["port"]
             self.remote_dir = config["restore_config"]["remote_dir"]
             self.pem_file = config["restore_config"]["pem_file"]
+            self.remote_install = config["restore_config"]["remote_install"]
 
     def spinning_cursor(self):
         """this is spinner function to spin cursor,print continuously when subprocess is running"""
@@ -68,10 +70,10 @@ class MangoBack:
     def backup_db(self):
         """this method will take backup on local machine """
         if self.buname is not None and self.bpwd is not None:
-            cmd = "mongodump --gzip --host {host} --username {uname} --password {pwd}".format(
-                host=self.host, uname=self.buname, pwd=self.bpwd)
+            cmd = "mongodump  --host {host} --port {port} --username {uname} --password {pwd}".format(
+                host=self.host,port=self.port, uname=self.buname, pwd=self.bpwd)
         else:
-            cmd = "mongodump --gzip --host {host}".format(host=self.host)
+            cmd = "mongodump  --host {host} --port {port}".format(host=self.host,port=self.port)
         if self.dbname is not None:
             cmd = cmd + " --db {dbname}".format(dbname=self.dbname)
         cmd = cmd + " --out={db_dir}".format(db_dir=self.backup_dir)
@@ -87,14 +89,25 @@ class MangoBack:
         print "Backup process is finished"
         print "Backup files at", self.backup_dir
 
+    def remote_upload(self):
+        """it will upload all file to server"""
+        cmd = 'rsync --update -rave "ssh -i {pempath}" {backup_db_dir} {instance_url}:{remote_dir}'.format(
+            pempath=self.pem_file, backup_db_dir=self.backup_dir,
+            instance_url=self.instance_url, remote_dir=self.remote_dir)
+        print "uploading...at remote dir:", self.remote_dir
+        self.ps = subprocess.Popen(cmd, shell=True)
+        self.ps.communicate()
+        print "restore process is finished"
+
+
     def restore_db(self):
         """ it will restore uploaded dir"""
 
         if self.runame is not None and self.rpwd is not None:
-            cmd = "mongorestore --drop --gzip  --host {host} --username {uname} --password {pwd}".format(
+            cmd = "mongorestore --drop   --host {host} --username {uname} --password {pwd}".format(
                 host=self.host, uname=self.runame, pwd=self.rpwd)
         else:
-            cmd = "mongorestore --drop --gzip  --host {host}".format(
+            cmd = "mongorestore --drop   --host {host}".format(
                 host=self.host)
         cmd = cmd + " {db_dir}".format(db_dir=self.remote_dir)
         print cmd
@@ -112,18 +125,11 @@ class MangoBack:
         print colorama.Style.RESET_ALL
         print "restore process is finished"
 
-    def remote_upload(self):
-        """it will upload all file to server"""
-        cmd = 'rsync --update -rave "ssh -i {pempath}" {backup_db_dir} {instance_url}:{remote_dir}'.format(
-            pempath=self.pem_file, backup_db_dir=self.backup_dir,
-            instance_url=self.instance_url, remote_dir=self.remote_dir)
-        print "uploading...at remote dir:", self.remote_dir
-        self.ps = subprocess.Popen(cmd, shell=True)
-        self.ps.communicate()
-        print "restore process is finished"
-
     def run(self):
         """it's ultimate method to run all process in single method call"""
         self.backup_db()
-        self.remote_upload()
-        self.restore_db()
+        if self.remote is True:
+            self.remote_upload()
+            if self.remote_install is True:
+                self.restore_db()
+        
